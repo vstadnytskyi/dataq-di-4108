@@ -5,6 +5,10 @@ cache:
   directories:
     - $HOME/.cache/pip
     - $HOME/.ccache  # https://github.com/travis-ci/travis-ci/issues/5853
+env:
+  global:
+    # Doctr deploy key for vstadnytskyi/dataq-di-4108
+    - secure: "X9C/Nn+Wr7YiD/hiG9+JvkLKyeoGy80HEZ82Gq3yr1dHTlc9alD5echMMIs1EtgODPwkKuKdKYJ5oOwzg6r9gMfbeNobL5+Te3gnsUWZBoWjCqYxpxdE4JyoHNYKB3LGv55BbnjcQUuUz9nQBiP6b12Fn/oK0owqjn6laZC1Gp7mbeXqbEANS1T96KdZQkHDGMm+da4havdKMH3rjdOJvaF+nY9+nkPEKv/KOxHY/1IT9eqTyK5DN/s6pYfjIMr6KEr8BU5kakoWc1BxEBm1eU9QOPTcCpn7SingTTRhbrGdv39VQTsjOndtPR5b3IFema/LPfO57+nL4QFSUdzaDmQBriyG2RYBQZMC2Q9dBO1silbDPem3RMEySn13M5NzNYdIrwYjVrm3UJxdMSE3NJahTySK7812ENgfjJSUlZVQ4fkLaprVw2VLboZNffk366sczCdeV07pzp+YSo7Cpr82IEekJOhIy5PtCxM9HOQsw4CzudCEh1HR8T4Vz8dfpioF212+/jmueimB6uSv8MSnHkE+fEIxKYuZEyPvXE4VkWIHFg6W8IkXlAxfEvibQawGPhkHpDuuCAAv/uVCWiL0BYtD2NJJUxvq5mYKXrEmJO1MiVhABBeOTgUuTI9HYwKdMjRYTZwC05NrjqOf7o0y0a/jukX+NG+hbRubwWo="
 
 install:
   # Install this package and the packages listed in requirements.txt.
@@ -17,4 +21,7 @@ script:
   - coverage report -m  # Generate test coverage report.
   - codecov  # Upload the report to codecov.
   - flake8  # Enforce code style ('relaxed' line length limit is set in .flake8 config file).
+  - set -e  # If any of the following steps fail, just stop at that point.
   - make -C docs html  # Build the documentation.
+  - pip install doctr
+  - doctr deploy --built-docs docs/build/html .  # Publish the documentation.
